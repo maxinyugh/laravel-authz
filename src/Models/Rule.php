@@ -3,7 +3,8 @@
 namespace Lauthz\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
+
+// use Illuminate\Support\Facades\Cache;
 
 /**
  * Rule Model.
@@ -93,7 +94,7 @@ class Rule extends Model
         $driver = config('lauthz.default');
         $store = $this->config('cache.store', 'default');
         $store = 'default' == $store ? null : $store;
-        $this->store = Cache::store($store);
+        $this->store = app('cache')->store($store);
     }
 
     /**
