@@ -44,10 +44,34 @@ class DatabaseAdapter implements DatabaseAdapterContract
     {
         $col['ptype'] = $ptype;
         foreach ($rule as $key => $value) {
-            $col['v'.strval($key)] = $value;
+            $col['v' . strval($key)] = $value;
         }
 
         $this->eloquent->create($col);
+    }
+
+    /**
+     * savePoliciesLine function.
+     *
+     * @param string $ptype
+     * @param array  $rule
+     *
+     * @return void
+     */
+    public function savePoliciesLine(string $ptype, array $rules)
+    {
+        $data = [];
+        foreach ($rules as $v) {
+            $val = [
+                'ptype' => $ptype,
+                'updated_at' => date('Y-m-d H:i:s', time())
+            ];
+            foreach ($v as $s => $r) {
+                $val['v' . $s] = $r;
+            }
+            $data[] = $val;
+        }
+        return $this->eloquent->insert($data);
     }
 
     /**
@@ -91,6 +115,7 @@ class DatabaseAdapter implements DatabaseAdapterContract
         return true;
     }
 
+
     /**
      * Adds a policy rule to the storage.
      * This is part of the Auto-Save feature.
@@ -104,6 +129,21 @@ class DatabaseAdapter implements DatabaseAdapterContract
     public function addPolicy($sec, $ptype, $rule)
     {
         return $this->savePolicyLine($ptype, $rule);
+    }
+
+    /**
+     * Adds a policies rule to the storage.
+     * This is part of the Auto-Save feature.
+     *
+     * @param string $sec
+     * @param string $ptype
+     * @param array  $rule
+     *
+     * @return mixed
+     */
+    public function addPolicies($sec, $ptype, $rules)
+    {
+        return $this->savePoliciesLine($ptype, $rules);
     }
 
     /**
@@ -122,7 +162,7 @@ class DatabaseAdapter implements DatabaseAdapterContract
         $instance = $this->eloquent->where('ptype', $ptype);
 
         foreach ($rule as $key => $value) {
-            $instance->where('v'.strval($key), $value);
+            $instance->where('v' . strval($key), $value);
         }
 
         foreach ($instance->get() as $model) {
@@ -132,6 +172,30 @@ class DatabaseAdapter implements DatabaseAdapterContract
         }
 
         return $count;
+    }
+
+    /**
+     * This is part of the Auto-Save feature.
+     *
+     * @param string $sec
+     * @param string $ptype
+     * @param array  $rule
+     *
+     * @return mixed
+     */
+    public function removePolicies(string $sec, string $ptype, array $rules)
+    {
+        return $this->eloquent->where('ptype', $ptype)->Where(function ($query) use ($rules) {
+            foreach ($rules as $value) {
+                $query->orWhere(function ($query_info) use ($value) {
+                    $where = [];
+                    foreach ($value as $k => $v) {
+                        $where['v' . $k] = $v;
+                    }
+                    $query_info->Where($where);
+                });
+            }
+        })->delete();
     }
 
     /**
@@ -153,7 +217,7 @@ class DatabaseAdapter implements DatabaseAdapterContract
         foreach (range(0, 5) as $value) {
             if ($fieldIndex <= $value && $value < $fieldIndex + count($fieldValues)) {
                 if ('' != $fieldValues[$value - $fieldIndex]) {
-                    $instance->where('v'.strval($value), $fieldValues[$value - $fieldIndex]);
+                    $instance->where('v' . strval($value), $fieldValues[$value - $fieldIndex]);
                 }
             }
         }
