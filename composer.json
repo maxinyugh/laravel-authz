@@ -1,17 +1,27 @@
 {
-    "name": "casbin/laravel-authz",
-    "keywords": ["laravel","casbin", "permission", "access-control", "authorization", "rbac", "acl", "abac", "authz"],
+    "name": "maxinyugh/laravel-authz",
+    "keywords": [
+        "laravel",
+        "casbin",
+        "permission",
+        "access-control",
+        "authorization",
+        "rbac",
+        "acl",
+        "abac",
+        "authz"
+    ],
     "description": "An authorization library that supports access control models like ACL, RBAC, ABAC in Laravel. ",
     "authors": [
         {
-            "name": "TechLee",
-            "email": "techlee@qq.com"
+            "name": "maxinyu",
+            "email": "408567964@qq.com"
         }
     ],
     "license": "Apache-2.0",
     "require": {
-    	"laravel/framework": "~5.1",
-    	"casbin/casbin": "~1.0"
+        "laravel/framework": "~5.1",
+        "maxinyugh/php-casbin": "~1.0.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.7|~6.0|~7.0|~8.0",
@@ -26,17 +36,17 @@
     },
     "autoload-dev": {
         "psr-4": {
-          "Lauthz\\Tests\\": "tests/"
+            "Lauthz\\Tests\\": "tests/"
         }
     },
     "extra": {
-	    "laravel": {
-	      	"providers": [
-	        	"Lauthz\\LauthzServiceProvider"
-	      	],
-	      	"aliases": {
-	        	"Enforcer": "Lauthz\\Facades\\Enforcer"
-	      	}
-	    }
-  	}
+        "laravel": {
+            "providers": [
+                "Lauthz\\LauthzServiceProvider"
+            ],
+            "aliases": {
+                "Enforcer": "Lauthz\\Facades\\Enforcer"
+            }
+        }
+    }
 }
