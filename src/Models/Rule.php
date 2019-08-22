@@ -93,7 +93,7 @@ class Rule extends Model
         $driver = config('lauthz.default');
         $store = $this->config('cache.store', 'default');
         $store = 'default' == $store ? null : $store;
-        $this->store = Cache::store($store);
+        $this->store = app('cache')->store($store);
     }
 
     /**
@@ -108,6 +108,6 @@ class Rule extends Model
     {
         $driver = config('lauthz.default');
 
-        return config('lauthz.'.$driver.'.'.$key, $default);
+        return config('lauthz.' . $driver . '.' . $key, $default);
     }
 }
