@@ -3,7 +3,8 @@
 namespace Lauthz\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
+
+// use Illuminate\Support\Facades\Cache;
 
 /**
  * Rule Model.
@@ -44,12 +45,12 @@ class Rule extends Model
     /**
      * Gets rules from caches.
      *
-     * @return void
+     * @return mixed
      */
     public function getAllFromCache()
     {
         $get = function () {
-            return $this->get()->toArray();
+            return $this->select('ptype', 'v0', 'v1', 'v2', 'v3', 'v4', 'v5')->get()->toArray();
         };
         if (!$this->config('cache.enabled', false)) {
             return $get();
@@ -60,8 +61,6 @@ class Rule extends Model
 
     /**
      * Refresh Cache.
-     *
-     * @return void
      */
     public function refreshCache()
     {
@@ -75,8 +74,6 @@ class Rule extends Model
 
     /**
      * Forget Cache.
-     *
-     * @return void
      */
     public function forgetCache()
     {
@@ -85,8 +82,6 @@ class Rule extends Model
 
     /**
      * Init cache.
-     *
-     * @return void
      */
     protected function initCache()
     {
